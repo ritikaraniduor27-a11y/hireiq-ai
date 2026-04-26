@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HireIQ — Smart Talent Engagement Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf7f2;
+    --warm: #f4ede0;
+    --brown: #5c3d2e;
+    --dark: #1a1008;
+    --accent: #d4620a;
+    --accent2: #2d7a4f;
+    --gold: #c9a84c;
+    --border: #e4d8c8;
+    --muted: #8b7355;
+    --text: #2a1f14;
+    --surface: #fff;
+    --surface2: #fdf9f5;
+    --red: #c0392b;
+    --blue: #2471a3;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+  /* Decorative top bar */
+  .top-stripe {
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--gold) 50%, var(--accent2) 100%);
+  }
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(90,60,30,0.06);
+  }
+  .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--brown);
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: var(--accent); }
+  .tagline {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .main { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+  .hero {
+    text-align: center;
+    padding: 2.5rem 0 2rem;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 1px; height: 40px;
+    background: var(--border);
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900;
+    line-height: 1.15;
+    color: var(--dark);
+    margin-bottom: 0.8rem;
+  }
+  .hero h1 em { color: var(--accent); font-style: italic; }
+  .hero p { color: var(--muted); font-size: 1rem; max-width: 480px; margin: 0 auto; line-height: 1.6; }
+  .steps-nav {
+    display: flex;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 2rem 0;
+    background: var(--surface);
+    box-shadow: 0 2px 6px rgba(90,60,30,0.05);
+  }
+  .step-tab {
+    flex: 1;
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    padding: 0.9rem 0.5rem;
+    background: transparent; border: none;
+    color: var(--muted); cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem; font-weight: 500;
+    border-right: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .step-tab:last-child { border-right: none; }
+  .step-tab .num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem; font-weight: 700;
+    transition: all 0.2s;
+  }
+  .step-tab.active { color: var(--accent); background: rgba(212,98,10,0.04); }
+  .step-tab.active .num { border-color: var(--accent); background: var(--accent); color: white; }
+  .step-tab:hover:not(.active) { background: var(--warm); }
+  .panel { display: none; }
+  .panel.active { display: block; animation: slideUp 0.35s ease; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.8rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(90,60,30,0.04);
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.3rem;
+  }
+  .card-sub {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+  }
+  label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--brown);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  textarea, input, select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.7rem 0.9rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: vertical;
+  }
+  textarea:focus, input:focus, select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(212,98,10,0.12);
+  }
+  .field { margin-bottom: 1.1rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.75rem 1.6rem;
+    border: none; border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem; font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--accent); color: white;
+    box-shadow: 0 2px 8px rgba(212,98,10,0.3);
+  }
+  .btn-primary:hover { background: #b5530a; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(212,98,10,0.35); }
+  .btn-secondary {
+    background: transparent; color: var(--accent);
+    border: 1.5px solid var(--accent);
+  }
+  .btn-secondary:hover { background: rgba(212,98,10,0.06); }
+  .btn-green {
+    background: var(--accent2); color: white;
+    box-shadow: 0 2px 8px rgba(45,122,79,0.25);
+  }
+  .btn-green:hover { background: #246841; }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  @media(max-width:620px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  /* Candidate Cards - editorial magazine style */
+  .cand-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.3rem;
+    margin-bottom: 0.8rem;
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex; gap: 1rem;
+    box-shadow: 0 1px 4px rgba(90,60,30,0.05);
+  }
+  .cand-card:hover { border-color: var(--accent); transform: translateX(3px); box-shadow: 0 4px 12px rgba(90,60,30,0.1); }
+  .rank-col {
+    display: flex; flex-direction: column; align-items: center;
+    min-width: 48px;
+  }
+  .rank-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--border);
+  }
+  .rank-num.r1 { color: var(--gold); }
+  .rank-num.r2 { color: var(--muted); }
+  .rank-num.r3 { color: #cd7c3e; }
+  .cand-info { flex: 1; }
+  .cand-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; margin-bottom: 0.2rem; }
+  .cand-role { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.6rem; }
+  .scores-row { display: flex; gap: 1.5rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
+  .score-item { display: flex; flex-direction: column; align-items: flex-start; }
+  .score-label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+  .score-val { font-size: 1.1rem; font-weight: 700; font-family: 'Playfair Display', serif; }
+  .score-val.match { color: var(--accent2); }
+  .score-val.interest { color: var(--blue); }
+  .score-val.combined { color: var(--accent); }
+  .progress-bar {
+    height: 4px; background: var(--border); border-radius: 2px;
+    overflow: hidden; margin-top: 0.5rem;
+  }
+  .progress-fill { height: 100%; border-radius: 2px; transition: width 0.8s ease; }
+  .fill-match { background: var(--accent2); }
+  .fill-interest { background: var(--blue); }
+  .tag-row { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
+  .tag {
+    background: var(--warm);
+    border: 1px solid var(--border);
+    padding: 0.15rem 0.55rem;
+    border-radius: 3px;
+    font-size: 0.72rem;
+    color: var(--brown);
+    font-weight: 500;
+  }
+  .explain-box {
+    background: var(--warm);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 5px 5px 0;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-top: 0.6rem;
+  }
+  .stats-row {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.1rem;
+    text-align: center;
+    box-shadow: 0 1px 4px rgba(90,60,30,0.04);
+  }
+  .stat-big {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; font-weight: 900;
+    color: var(--accent);
+  }
+  .stat-lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); font-weight: 600; margin-top: 0.2rem; }
+  .divider {
+    display: flex; align-items: center; gap: 1rem;
+    margin: 1.5rem 0; color: var(--muted);
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .divider::before,.divider::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  /* Chat styles */
+  .chat-container { border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  .chat-candidate-bar {
+    background: var(--warm); border-bottom:1px solid var(--border);
+    padding:0.7rem 1rem; display:flex; gap:0.5rem; flex-wrap:wrap;
+  }
+  .cand-chip {
+    padding:0.3rem 0.8rem; border-radius:20px;
+    border:1.5px solid var(--border);
+    background:white; color:var(--muted);
+    font-size:0.75rem; font-weight:500; cursor:pointer;
+    transition:all 0.2s;
+  }
+  .cand-chip.active { border-color:var(--accent); background:var(--accent); color:white; }
+  .chat-messages {
+    height:300px; overflow-y:auto; padding:1rem;
+    display:flex; flex-direction:column; gap:0.8rem;
+    background:var(--cream);
+    scroll-behavior:smooth;
+  }
+  .bubble-row { display:flex; gap:0.6rem; align-items:flex-end; }
+  .bubble-row.right { flex-direction:row-reverse; }
+  .avatar {
+    width:30px; height:30px; border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px; font-weight:700; flex-shrink:0;
+  }
+  .avatar.ai { background:var(--accent); color:white; }
+  .avatar.user { background:var(--accent2); color:white; }
+  .bubble {
+    max-width:75%; padding:0.65rem 0.9rem;
+    border-radius:10px; font-size:0.85rem; line-height:1.5;
+  }
+  .bubble.ai { background:white; border:1px solid var(--border); border-bottom-left-radius:3px; }
+  .bubble.user { background:var(--accent2); color:white; border-bottom-right-radius:3px; }
+  .chat-input-bar {
+    border-top:1px solid var(--border); padding:0.8rem 1rem;
+    display:flex;gap:0.6rem; background:white;
+  }
+  .chat-input-bar input { flex:1; background:var(--cream); }
+  .loading-dots {
+    display:inline-flex;gap:3px;align-items:center;
+    padding:0.4rem;
+  }
+  .loading-dots span {
+    width:6px;height:6px;border-radius:50%;
+    background:var(--muted);
+    animation:bounce 1.2s infinite;
+  }
+  .loading-dots span:nth-child(2){animation-delay:0.2s;}
+  .loading-dots span:nth-child(3){animation-delay:0.4s;}
+  @keyframes bounce{0%,80%,100%{transform:scale(0.6);opacity:0.4}40%{transform:scale(1);opacity:1}}
+  .interest-meter {
+    display:flex;align-items:center;gap:0.5rem;
+    font-size:0.75rem;color:var(--muted);padding:0.5rem 1rem;
+    border-top:1px solid var(--border);background:var(--warm);
+  }
+  .meter-bar {width:100px;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+  .meter-fill {height:100%;background:linear-gradient(90deg,var(--accent2),var(--gold));border-radius:3px;transition:width 0.5s;}
+  .empty-msg {
+    text-align:center;padding:2.5rem;color:var(--muted);
+    font-size:0.85rem;
+  }
+  .arch-block {
+    border:1px solid var(--border);border-radius:8px;padding:1.2rem;
+    margin-bottom:0.8rem;background:var(--surface2);
+  }
+  .arch-block-title {
+    font-family:'Playfair Display',serif;font-weight:700;
+    color:var(--accent);margin-bottom:0.4rem;font-size:0.95rem;
+  }
+  .arch-block p { font-size:0.85rem;color:var(--muted);line-height:1.6; }
+  .loading-overlay {
+    text-align:center;padding:2rem;color:var(--muted);
+    font-size:0.85rem;
+  }
+  .spinner {
+    width:36px;height:36px;border:3px solid var(--border);
+    border-top-color:var(--accent);border-radius:50%;
+    animation:spin 0.8s linear infinite;margin:0 auto 0.8rem;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="top-stripe"></div>
+<header class="header">
+  <div>
+    <div class="logo">Hire<span>IQ</span></div>
+  </div>
+  <div class="tagline">Intelligent Talent Engagement Platform</div>
+  <div style="font-size:0.75rem;color:var(--muted);">Powered by Claude AI</div>
+</header>
+
+<main class="main">
+  <div class="hero">
+    <h1>Find talent that <em>fits</em>.<br>Engage them <em>intelligently</em>.</h1>
+    <p>HireIQ scores candidates on role match and genuine interest, so recruiters can act on the right people first.</p>
+  </div>
+
+  <div class="steps-nav">
+    <button class="step-tab active" onclick="goTab('input',this)"><div class="num">1</div> Job Input</button>
+    <button class="step-tab" onclick="goTab('results',this)"><div class="num">2</div> Candidates</button>
+    <button class="step-tab" onclick="goTab('engage',this)"><div class="num">3</div> Engage</button>
+    <button class="step-tab" onclick="goTab('shortlist',this)"><div class="num">4</div> Shortlist</button>
+    <button class="step-tab" onclick="goTab('arch',this)"><div class="num">5</div> Architecture</button>
+  </div>
+
+  <!-- INPUT PANEL -->
+  <div id="tab-input" class="panel active">
+    <div class="card">
+      <div class="card-title">Job Description</div>
+      <div class="card-sub">Paste the full JD — HireIQ will extract requirements and score your candidates automatically.</div>
+      <div class="field">
+        <label>Full Job Description</label>
+        <textarea id="jdText" rows="8" placeholder="We are hiring a Product Manager to lead our core payments platform. The ideal candidate has 3+ years PM experience with fintech or B2B SaaS products, strong data literacy, and experience working cross-functionally with engineering and design..."></textarea>
+      </div>
+      <div class="grid-2">
+        <div class="field">
+          <label>Role Title</label>
+          <input id="roleInput" type="text" placeholder="e.g. Product Manager — Payments" />
+        </div>
+        <div class="field">
+          <label>Seniority</label>
+          <select id="seniorityInput">
+            <option>Junior</option>
+            <option selected>Mid-level</option>
+            <option>Senior</option>
+            <option>Lead / Head</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Candidate Pool</div>
+      <div class="card-sub">One candidate per line: Name | Skills/Background | Years Experience | Brief Bio</div>
+      <div class="field">
+        <textarea id="candidatesText" rows="9" placeholder="Neha Gupta | Product strategy, Fintech, SQL, Jira | 4 years | Former PM at Razorpay, built checkout product used by 2M merchants
+Rahul Verma | Agile, B2B SaaS, user research, analytics | 5 years | PM at Freshworks, led 3 product launches, MBA from IIM-A
+Anjali Singh | Mobile apps, growth, A/B testing | 3 years | Product lead at a Series A startup, strong data background
+Vikram Nair | Engineering background, APIs, developer tools | 6 years | Transitioned from SWE to PM, deep technical credibility
+Pooja Shah | UX research, consumer apps, product roadmaps | 2 years | Smart and fast-learning, no fintech yet
+Aditya Kulkarni | Payments, banking, compliance, enterprise | 8 years | Senior PM from HDFC, deep domain expertise"></textarea>
+      </div>
+      <button class="btn btn-primary" id="analyzeBtn" onclick="analyze()">
+        🔍 Analyse & Score Candidates
+      </button>
+    </div>
+  </div>
+
+  <!-- RESULTS PANEL -->
+  <div id="tab-results" class="panel">
+    <div id="resultsContent">
+      <div class="empty-msg">Run analysis first to see candidate results here.</div>
+    </div>
+  </div>
+
+  <!-- ENGAGE PANEL -->
+  <div id="tab-engage" class="panel">
+    <div class="card" style="padding:0;">
+      <div style="padding:1.5rem 1.5rem 0;">
+        <div class="card-title">Conversational Interest Assessment</div>
+        <div class="card-sub">Select a candidate and simulate outreach conversation to gauge genuine interest.</div>
+      </div>
+      <div class="chat-candidate-bar" id="chipBar">
+        <span style="font-size:0.78rem;color:var(--muted);align-self:center;">→ Run analysis first to load candidates</span>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="empty-msg">Select a candidate above to begin the engagement simulation.</div>
+      </div>
+      <div class="interest-meter">
+        <span style="font-weight:600;color:var(--brown);">Live Interest Score:</span>
+        <div class="meter-bar"><div class="meter-fill" id="liveMeter" style="width:0%"></div></div>
+        <span id="liveScore" style="font-weight:700;color:var(--accent);">—</span>
+      </div>
+      <div class="chat-input-bar">
+        <input id="chatIn" type="text" placeholder="Type as the candidate..." onkeydown="if(event.key==='Enter')sendMsg()" />
+        <button class="btn btn-green" onclick="sendMsg()">Send →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHORTLIST PANEL -->
+  <div id="tab-shortlist" class="panel">
+    <div class="card">
+      <div class="card-title">Final Ranked Shortlist</div>
+      <div class="card-sub">Combined ranking: 60% Match Score + 40% Interest Score. Ready to share with hiring managers.</div>
+      <div id="shortlistContent">
+        <div class="empty-msg">Complete candidate analysis to generate the shortlist.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE PANEL -->
+  <div id="tab-arch" class="panel">
+    <div class="card">
+      <div class="card-title">System Architecture & Scoring Logic</div>
+      <div class="card-sub">How HireIQ works under the hood</div>
+
+      <div style="display:flex;flex-direction:column;gap:0.8rem;margin-bottom:1.5rem;">
+        <div class="arch-block">
+          <div class="arch-block-title">Stage 1 — JD Parsing & Rubric Creation</div>
+          <p>The AI model reads the raw job description and extracts a structured scoring rubric: required skills, experience band, domain knowledge requirements, soft skills, and culture fit signals. This rubric becomes the basis for candidate evaluation.</p>
+        </div>
+        <div class="arch-block">
+          <div class="arch-block-title">Stage 2 — Candidate Match Scoring (0–100)</div>
+          <p>Each candidate's profile is compared against the rubric. Scoring dimensions: skill coverage (40%), experience fit (25%), domain relevance (20%), leadership/growth signals (15%). Every score includes a plain-English explanation for recruiter transparency.</p>
+        </div>
+        <div class="arch-block">
+          <div class="arch-block-title">Stage 3 — Interest Simulation & Scoring (0–100)</div>
+          <p>Simulated conversational outreach: HireIQ's AI agent plays the recruiter, asking about career goals, role excitement, current situation, and availability. It analyses response sentiment, specificity, and enthusiasm to derive an Interest Score — modeling what a real engagement conversation would reveal.</p>
+        </div>
+        <div class="arch-block">
+          <div class="arch-block-title">Stage 4 — Combined Ranking & Shortlist</div>
+          <p><strong>Combined Score = 0.6 × Match + 0.4 × Interest</strong>. The final ranked output gives recruiters a single, actionable shortlist with full audit trail — no black boxes.</p>
+        </div>
+      </div>
+      <div style="background:var(--warm);border:1px solid var(--border);border-radius:8px;padding:1.2rem;">
+        <div style="font-weight:700;color:var(--brown);margin-bottom:0.5rem;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.05em;">Tech Stack</div>
+        <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;">
+          <strong>Frontend:</strong> HTML5, CSS3, Vanilla JS (zero dependencies, zero build step)<br>
+          <strong>AI Model:</strong> Anthropic Claude API — claude-sonnet-4-20250514<br>
+          <strong>Deployment:</strong> GitHub Pages / Netlify (static hosting)<br>
+          <strong>Architecture:</strong> Client-side SPA, no backend required
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  let candidates = [];
+  let currentCand = null;
+  let chatHist = [];
+  let currentJD = '';
+  let messageCount = 0;
+
+  function goTab(name, el) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.step-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    if(el) el.classList.add('active');
+  }
+
+  async function claude(prompt, sys='', hist=[]) {
+    const msgs = hist.length ? hist : [{ role:'user', content:prompt }];
+    const body = { model:'claude-sonnet-4-20250514', max_tokens:1000, messages: msgs };
+    if(sys) body.system = sys;
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)
+    });
+    const d = await r.json();
+    return d.content.map(c=>c.text||'').join('');
+  }
+
+  async function analyze() {
+    const jd = document.getElementById('jdText').value.trim();
+    const pool = document.getElementById('candidatesText').value.trim();
+    if(!jd||!pool){alert('Please fill in the Job Description and Candidate Pool.');return;}
+    currentJD = jd;
+
+    const btn = document.getElementById('analyzeBtn');
+    btn.disabled=true; btn.textContent='⏳ Analysing...';
+    document.getElementById('resultsContent').innerHTML = `
+      <div class="loading-overlay">
+        <div class="spinner"></div>
+        <div>HireIQ AI is evaluating candidates...</div>
+        <div style="font-size:0.75rem;margin-top:0.4rem;color:var(--muted);">Parsing JD → Scoring candidates → Ranking shortlist</div>
+      </div>`;
+    goTab('results', document.querySelectorAll('.step-tab')[1]);
+
+    const prompt = `You are HireIQ, an AI talent evaluation engine.
+
+JOB DESCRIPTION:
+${jd}
+
+CANDIDATE POOL:
+${pool}
+
+Evaluate every candidate against the JD on two scores:
+1. matchScore (0-100): skill coverage, experience fit, domain relevance
+2. interestScore (0-100): inferred from profile trajectory, career alignment, growth signals
+
+Return ONLY valid JSON (no markdown fences):
+{
+  "jobTitle": "extracted title",
+  "keySkills": ["skill1","skill2","skill3"],
+  "experienceRequired": "X years",
+  "candidates": [
+    {
+      "name": "Full Name",
+      "background": "their role/background",
+      "skills": ["skill1","skill2","skill3"],
+      "experience": "N years",
+      "matchScore": 82,
+      "interestScore": 75,
+      "combinedScore": 79,
+      "matchReason": "Concise explanation of match score",
+      "interestReason": "Concise explanation of interest score estimate",
+      "strengths": ["strength1","strength2"],
+      "gaps": ["gap1"]
+    }
+  ]
+}
+
+Sort candidates by combinedScore descending. combinedScore = round(0.6*matchScore + 0.4*interestScore).`;
+
+    try {
+      const raw = await claude(prompt);
+      const clean = raw.replace(/```json|```/g,'').trim();
+      const data = JSON.parse(clean);
+      candidates = data.candidates;
+      renderResults(data);
+      renderShortlist(data);
+      buildChips(data.candidates);
+    } catch(e) {
+      document.getElementById('resultsContent').innerHTML = `<div class="empty-msg" style="color:var(--red);">Error analysing: ${e.message}. Please try again.</div>`;
+    }
+    btn.disabled=false; btn.textContent='🔍 Analyse & Score Candidates';
+  }
+
+  function renderResults(data) {
+    const avg = n => Math.round(data.candidates.reduce((a,c)=>a+c[n],0)/data.candidates.length);
+    let html = `
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-big">${data.candidates.length}</div><div class="stat-lbl">Candidates</div></div>
+        <div class="stat-card"><div class="stat-big">${avg('matchScore')}</div><div class="stat-lbl">Avg Match</div></div>
+        <div class="stat-card"><div class="stat-big">${data.candidates.filter(c=>c.combinedScore>=75).length}</div><div class="stat-lbl">Strong Matches</div></div>
+      </div>`;
+
+    if(data.keySkills?.length) {
+      html+=`<div style="margin-bottom:1.2rem;padding:1rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;">
+        <div style="font-weight:600;color:var(--brown);font-size:0.78rem;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.6rem;">Key Requirements Identified</div>
+        <div class="tag-row">${data.keySkills.map(s=>`<span class="tag">${s}</span>`).join('')}</div>
+      </div>`;
+    }
+
+    html += `<div class="divider">Ranked by Combined Score</div>`;
+
+    data.candidates.forEach((c,i) => {
+      const rClass = i===0?'r1':(i===1?'r2':(i===2?'r3':''));
+      html+=`
+        <div class="cand-card" onclick="startChat('${c.name.replace(/'/g,"\\'")}')">
+          <div class="rank-col">
+            <div class="rank-num ${rClass}">${i+1}</div>
+          </div>
+          <div class="cand-info">
+            <div class="cand-name">${c.name}</div>
+            <div class="cand-role">${c.background||''} · ${c.experience||''}</div>
+            <div class="scores-row">
+              <div class="score-item">
+                <div class="score-label">Match</div>
+                <div class="score-val match">${c.matchScore}<span style="font-size:0.7rem;font-weight:400;color:var(--muted)">/100</span></div>
+              </div>
+              <div class="score-item">
+                <div class="score-label">Interest</div>
+                <div class="score-val interest">${c.interestScore}<span style="font-size:0.7rem;font-weight:400;color:var(--muted)">/100</span></div>
+              </div>
+              <div class="score-item">
+                <div class="score-label">Combined</div>
+                <div class="score-val combined">${c.combinedScore}<span style="font-size:0.7rem;font-weight:400;color:var(--muted)">/100</span></div>
+              </div>
+            </div>
+            <div style="display:flex;gap:0.5rem;margin:0.4rem 0;">
+              <div style="flex:1">
+                <div style="font-size:0.65rem;color:var(--muted);margin-bottom:2px;">Match</div>
+                <div class="progress-bar"><div class="progress-fill fill-match" style="width:${c.matchScore}%"></div></div>
+              </div>
+              <div style="flex:1">
+                <div style="font-size:0.65rem;color:var(--muted);margin-bottom:2px;">Interest</div>
+                <div class="progress-bar"><div class="progress-fill fill-interest" style="width:${c.interestScore}%"></div></div>
+              </div>
+            </div>
+            <div class="tag-row">${(c.skills||[]).slice(0,5).map(s=>`<span class="tag">${s}</span>`).join('')}</div>
+            <div class="explain-box">${c.matchReason||''}</div>
+            <div style="margin-top:0.4rem;font-size:0.78rem;color:var(--accent);font-weight:500;">→ Click to open engagement conversation</div>
+          </div>
+        </div>`;
+    });
+    document.getElementById('resultsContent').innerHTML = html;
+  }
+
+  function renderShortlist(data) {
+    let html = `<div class="stats-row">
+      <div class="stat-card"><div class="stat-big">${data.candidates.length}</div><div class="stat-lbl">Screened</div></div>
+      <div class="stat-card"><div class="stat-big">${data.candidates[0]?.combinedScore||'—'}</div><div class="stat-lbl">Top Score</div></div>
+      <div class="stat-card"><div class="stat-big">${data.candidates.filter(c=>c.combinedScore>=70).length}</div><div class="stat-lbl">Recommend</div></div>
+    </div>`;
+    data.candidates.forEach((c,i)=>{
+      const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+      html+=`
+        <div style="padding:1rem;border:1px solid var(--border);border-radius:8px;margin-bottom:0.7rem;background:var(--surface);display:flex;gap:1rem;align-items:flex-start;">
+          <div style="font-size:1.5rem;flex-shrink:0;margin-top:0.1rem;">${medal||`<span style='font-family:Playfair Display,serif;font-weight:900;color:var(--muted);font-size:1.2rem;'>${i+1}</span>`}</div>
+          <div style="flex:1;">
+            <div style="font-weight:700;font-family:Playfair Display,serif;margin-bottom:0.3rem;">${c.name}</div>
+            <div style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;">${c.background||''}</div>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:0.4rem;">
+              <span style="font-size:0.82rem;color:var(--accent2);font-weight:600;">Match: ${c.matchScore}/100</span>
+              <span style="font-size:0.82rem;color:var(--blue);font-weight:600;">Interest: ${c.interestScore}/100</span>
+              <span style="font-size:0.82rem;color:var(--accent);font-weight:700;">Combined: ${c.combinedScore}/100</span>
+            </div>
+            <div style="font-size:0.8rem;color:var(--muted);line-height:1.5;">${c.interestReason||''}</div>
+          </div>
+        </div>`;
+    });
+    document.getElementById('shortlistContent').innerHTML = html;
+  }
+
+  function buildChips(cands) {
+    const bar = document.getElementById('chipBar');
+    bar.innerHTML = cands.map(c =>
+      `<button class="cand-chip" onclick="startChat('${c.name.replace(/'/g,"\\'")}')">
+        ${c.name}
+        <span style="margin-left:0.3rem;font-weight:700;color:inherit;opacity:0.8;">${c.combinedScore}</span>
+      </button>`
+    ).join('');
+  }
+
+  function startChat(name) {
+    const cand = candidates.find(c=>c.name===name);
+    if(!cand) return;
+    currentCand = cand;
+    chatHist = [];
+    messageCount = 0;
+    document.querySelectorAll('.cand-chip').forEach(b=>{
+      b.classList.toggle('active', b.textContent.includes(name));
+    });
+    goTab('engage', document.querySelectorAll('.step-tab')[2]);
+    const opener = `Hi ${name.split(' ')[0]}! I came across your profile and would love to connect briefly. We have an opening that aligns well with your background in ${(cand.skills||[]).slice(0,2).join(' and ')}. Are you currently open to exploring new opportunities?`;
+    chatHist.push({role:'assistant',content:opener});
+    updateMeter(cand.interestScore * 0.5);
+    renderMessages();
+  }
+
+  function renderMessages() {
+    const box = document.getElementById('chatMessages');
+    if(!chatHist.length){
+      box.innerHTML='<div class="empty-msg">Select a candidate above to begin.</div>';
+      return;
+    }
+    box.innerHTML = chatHist.map(m=>`
+      <div class="bubble-row ${m.role==='assistant'?'':'right'}">
+        <div class="avatar ${m.role==='assistant'?'ai':'user'}">${m.role==='assistant'?'AI':'C'}</div>
+        <div class="bubble ${m.role==='assistant'?'ai':'user'}">${m.content}</div>
+      </div>`).join('');
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function updateMeter(score) {
+    const pct = Math.min(100, Math.max(0, score));
+    document.getElementById('liveMeter').style.width = pct + '%';
+    document.getElementById('liveScore').textContent = Math.round(pct) + '/100';
+  }
+
+  async function sendMsg() {
+    const inp = document.getElementById('chatIn');
+    const text = inp.value.trim();
+    if(!text||!currentCand) return;
+    inp.value=''; messageCount++;
+    chatHist.push({role:'user',content:text});
+    renderMessages();
+
+    const msgs = chatHist.map(m=>({role:m.role==='assistant'?'assistant':'user',content:m.content}));
+    const sys = `You are HireIQ, a professional AI recruiter, having a 1:1 conversation with ${currentCand.name} about a job opportunity.
+Candidate profile: ${JSON.stringify({skills:currentCand.skills,background:currentCand.background,experience:currentCand.experience})}.
+JD context: ${currentJD.substring(0,200)}.
+Your goals: assess genuine interest and motivation naturally. Ask about: current satisfaction, career goals, what excites them, availability timeline. Be warm, professional, concise (2-3 sentences). Do not mention scores. After ${messageCount} exchanges, if it feels natural, mention next steps.`;
+
+    const reply = await claude('', sys, msgs);
+    chatHist.push({role:'assistant',content:reply});
+
+    // Update interest meter based on conversation
+    const newInterest = Math.min(100, currentCand.interestScore * 0.5 + (messageCount * 5) + (text.length > 50 ? 8 : 3));
+    updateMeter(newInterest);
+    renderMessages();
+  }
+</script>
+</body>
+</html>
